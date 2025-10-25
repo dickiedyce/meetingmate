@@ -28,18 +28,18 @@ var (
 
 // Meeting represents parsed meeting information
 type Meeting struct {
-	Title         string
-	DateTime      string
-	MeetingTime   time.Time
-	Duration      string
-	Frequency     string
-	Location      string
-	MeetLink      string
-	PhoneInfo     string
-	Organizer     string
-	Attendees     []Attendee
-	Description   string
-	Links         []string
+	Title       string
+	DateTime    string
+	MeetingTime time.Time
+	Duration    string
+	Frequency   string
+	Location    string
+	MeetLink    string
+	PhoneInfo   string
+	Organizer   string
+	Attendees   []Attendee
+	Description string
+	Links       []string
 }
 
 // Attendee represents meeting participant information
@@ -107,7 +107,7 @@ func main() {
 	} else {
 		// Check if output is being piped (not a terminal)
 		isTerminal := isatty.IsTerminal(os.Stdout.Fd())
-		
+
 		if *plainFlag || !isTerminal {
 			// Plain text output or piped output (like pbcopy)
 			if *plainFlag {
@@ -124,7 +124,7 @@ func main() {
 			var markdownContent []string
 			inFrontMatter := false
 			frontMatterClosed := false
-			
+
 			for i, line := range lines {
 				if i == 0 && line == "---" {
 					inFrontMatter = true
@@ -139,7 +139,7 @@ func main() {
 					markdownContent = append(markdownContent, line)
 				}
 			}
-			
+
 			// Display front matter in a styled box
 			if frontMatterClosed && len(frontMatter) > 0 {
 				frontMatterStyle := lipgloss.NewStyle().
@@ -147,11 +147,11 @@ func main() {
 					BorderForeground(lipgloss.Color("#7D56F4")).
 					Padding(1).
 					Margin(1)
-				
+
 				fmt.Print(frontMatterStyle.Render(strings.Join(frontMatter, "\n")))
 				fmt.Print("\n")
 			}
-			
+
 			// Render the rest with glamour
 			markdownOnly := strings.Join(markdownContent, "\n")
 			if strings.TrimSpace(markdownOnly) != "" {
@@ -310,7 +310,7 @@ func parseMeeting(input string) (*Meeting, error) {
 			continue
 		}
 
-		// Parse "Created by:" 
+		// Parse "Created by:"
 		if strings.HasPrefix(line, "Created by:") {
 			createdBy := strings.TrimSpace(strings.TrimPrefix(line, "Created by:"))
 			if createdBy != "" {
@@ -351,13 +351,13 @@ func parseAttendee(line string, lines []string, index int) Attendee {
 	attendee := Attendee{}
 
 	// Skip obvious non-attendee lines
-	if strings.Contains(line, "guests") || strings.Contains(line, "yes") || 
+	if strings.Contains(line, "guests") || strings.Contains(line, "yes") ||
 		strings.Contains(line, "awaiting") || strings.Contains(line, "Edit") ||
 		strings.Contains(line, "More joining") || strings.Contains(line, "http") ||
 		strings.Contains(line, "@") || strings.Contains(line, "event_busy") ||
 		strings.Contains(line, "Out of office") || strings.Contains(line, "bedtime") ||
 		strings.Contains(line, "Outside working hours") || line == "–" ||
-		line == "Home" || line == "Office" || line == "Scotland" || 
+		line == "Home" || line == "Office" || line == "Scotland" ||
 		strings.Contains(line, "Declined because") || len(line) < 3 ||
 		strings.HasPrefix(line, "http://") || strings.HasPrefix(line, "https://") {
 		return attendee
@@ -375,10 +375,10 @@ func parseAttendee(line string, lines []string, index int) Attendee {
 					break
 				}
 			}
-			
+
 			if !hasNumbers {
 				attendee.Name = line
-				
+
 				// Look ahead for status and location info
 				if index+1 < len(lines) {
 					nextLine := strings.TrimSpace(lines[index+1])
@@ -399,57 +399,57 @@ func parseAttendee(line string, lines []string, index int) Attendee {
 
 func parseMeetingTime(dateTimeStr string) time.Time {
 	// Parse formats like "Monday, 27 October⋅14:30 – 15:00"
-	
+
 	// Split by the bullet point (⋅)
 	parts := strings.Split(dateTimeStr, "⋅")
 	if len(parts) != 2 {
 		return time.Time{} // Return zero time if parsing fails
 	}
-	
+
 	datePart := strings.TrimSpace(parts[0])
 	timePart := strings.TrimSpace(parts[1])
-	
+
 	// Extract start time (before the dash)
 	timeRange := strings.Split(timePart, "–")
 	if len(timeRange) == 0 {
 		return time.Time{}
 	}
 	startTime := strings.TrimSpace(timeRange[0])
-	
+
 	// Parse the date part - try to extract day and month
 	// Format: "Monday, 27 October"
 	dateFields := strings.Fields(datePart)
 	if len(dateFields) < 3 {
 		return time.Time{}
 	}
-	
+
 	dayStr := strings.TrimSuffix(dateFields[1], ",")
 	monthStr := dateFields[2]
-	
+
 	// Convert month name to number
 	monthMap := map[string]int{
 		"January": 1, "February": 2, "March": 3, "April": 4,
 		"May": 5, "June": 6, "July": 7, "August": 8,
 		"September": 9, "October": 10, "November": 11, "December": 12,
 	}
-	
+
 	month, exists := monthMap[monthStr]
 	if !exists {
 		return time.Time{}
 	}
-	
+
 	// Parse day
 	day := 1
 	if d, err := time.Parse("2", dayStr); err == nil {
 		day = d.Day()
 	}
-	
+
 	// Parse time (format: "14:30")
 	timeParts := strings.Split(startTime, ":")
 	if len(timeParts) != 2 {
 		return time.Time{}
 	}
-	
+
 	hour := 0
 	minute := 0
 	if h, err := time.Parse("15", timeParts[0]); err == nil {
@@ -458,10 +458,10 @@ func parseMeetingTime(dateTimeStr string) time.Time {
 	if m, err := time.Parse("04", timeParts[1]); err == nil {
 		minute = m.Minute()
 	}
-	
+
 	// Use current year as default
 	year := time.Now().Year()
-	
+
 	// Create the time
 	meetingTime := time.Date(year, time.Month(month), day, hour, minute, 0, 0, time.UTC)
 	return meetingTime
@@ -480,26 +480,26 @@ func generateMarkdown(meeting *Meeting, includeDetails bool, includeAttendees bo
 	}
 	md.WriteString("]\n")
 	md.WriteString(fmt.Sprintf("date: %s\n", time.Now().Format("2006-01-02")))
-	
+
 	// Add meeting timestamp if parsed successfully
 	if !meeting.MeetingTime.IsZero() {
 		md.WriteString(fmt.Sprintf("meeting: %s\n", meeting.MeetingTime.Format("2006-01-02T15:04:05Z07:00")))
 	}
-	
+
 	// Add organiser if present
 	if meeting.Organizer != "" {
 		md.WriteString(fmt.Sprintf("organiser: %s\n", meeting.Organizer))
 	}
-	
+
 	// Add participants list
 	if len(meeting.Attendees) > 0 || meeting.Organizer != "" {
 		md.WriteString("participants:\n")
-		
+
 		// Add organizer first if present
 		if meeting.Organizer != "" {
 			md.WriteString(fmt.Sprintf("  - %s\n", meeting.Organizer))
 		}
-		
+
 		// Add attendees
 		for _, attendee := range meeting.Attendees {
 			if attendee.Name != "" && attendee.Name != meeting.Organizer {
@@ -507,7 +507,7 @@ func generateMarkdown(meeting *Meeting, includeDetails bool, includeAttendees bo
 			}
 		}
 	}
-	
+
 	md.WriteString("---\n")
 
 	// Title
@@ -516,11 +516,11 @@ func generateMarkdown(meeting *Meeting, includeDetails bool, includeAttendees bo
 	// Meeting details (optional)
 	if includeDetails {
 		md.WriteString("\n## Meeting Details\n")
-		
+
 		if meeting.DateTime != "" {
 			md.WriteString(fmt.Sprintf("**Date & Time:** %s\n", meeting.DateTime))
 		}
-		
+
 		if meeting.Frequency != "" {
 			md.WriteString(fmt.Sprintf("**Frequency:** %s\n", meeting.Frequency))
 		}
@@ -591,11 +591,11 @@ func generatePlainText(meeting *Meeting, includeDetails bool, includeAttendees b
 	// Meeting details (optional)
 	if includeDetails {
 		text.WriteString("\nMeeting Details:\n")
-		
+
 		if meeting.DateTime != "" {
 			text.WriteString(fmt.Sprintf("Date & Time: %s\n", meeting.DateTime))
 		}
-		
+
 		if meeting.Frequency != "" {
 			text.WriteString(fmt.Sprintf("Frequency: %s\n", meeting.Frequency))
 		}

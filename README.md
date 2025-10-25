@@ -57,13 +57,15 @@ meetingmate --input meeting.txt --details --attendees
 MeetingMate expects the text format that you get when copying a Google Calendar event. For example:
 
 ```
-Digital Lab Architecture weekly
-Monday, 27 October⋅14:30 – 15:00
+Weekly Team Standup
+Monday, 4 November⋅09:00 – 09:30
 Weekly on Monday
 
-meet.google.com/nzq-jeai-min
+meet.google.com/abc-defg-hij
 Join by phone
-‪(GB) +44 20 3873 3170‬ PIN: ‪392 870 041 0894‬#
+‪(US) +1 555 123 4567‬ PIN: ‪123 456 789 0123‬#
+Sarah Johnson
+Organiser
 ...
 ```
 
@@ -90,22 +92,29 @@ The tool generates Obsidian-compatible markdown with comprehensive YAML front ma
 
 ```markdown
 ---
-tags: [meeting, finja]
+tags: [meeting, sarah]
 date: 2025-10-25
-meeting: 2025-10-29T13:00:00Z
-organiser: Finja Wrzodek
+meeting: 2025-11-04T09:00:00Z
+organiser: Sarah Johnson
 participants:
-  - Finja Wrzodek
-  - Lukasz Rakoczy
-  - Richard Dyce
-  - Michael Gengler
+  - Sarah Johnson
+  - Alex Chen
+  - Maria Garcia
+  - David Kim
+  - Emily Rodriguez
 ---
 
-# LEAP Technical Meeting
+# Weekly Team Standup
 
 ## Description
 
-As we are approaching the phase in the LEAP project where coordination between the systems involved in material management will be needed, the team has decided that we should meet regularly in a technical group.
+This is our regular weekly standup where we'll discuss:
+- Progress updates from last week
+- Blockers and challenges
+- Goals for the upcoming week
+- Any questions or announcements
+
+Please come prepared with your updates. We'll keep it brief and focused.
 
 ## Notes
 
@@ -113,7 +122,8 @@ As we are approaching the phase in the LEAP project where coordination between t
 
 ## Links
 
-- meet.google.com/wxj-xdri-boh
+- meet.google.com/abc-defg-hij
+- https://company.atlassian.net/wiki/spaces/TEAM/pages/123456789/Weekly+Standup+Notes
 
 ## Action Items
 
@@ -188,14 +198,17 @@ Use `Ctrl+Shift+P` → `Tasks: Run Task` to access these.
 ### Testing
 
 ```bash
-# Test with sample data
+# Test with sample data (uses fictional team standup)
 ./meetingmate --input sample_meeting.txt
 
-# Test pipeline workflow  
-echo "Meeting content" | ./meetingmate --plain
+# Test pipeline workflow with clipboard
+pbpaste | ./meetingmate | pbcopy
 
-# Test all features
+# Test all features with full output
 ./meetingmate --input sample_meeting.txt --details --attendees --output test.md
+
+# Test plain text format
+./meetingmate --input sample_meeting.txt --plain
 ```
 
 ## Contributing

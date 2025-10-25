@@ -1,5 +1,5 @@
-Weekly Team Standup
-Monday, 4 November⋅09:00 – 09:30
+Weekly Team Standup & Planning Session
+Monday, 4 November⋅09:00 – 10:30
 Weekly on Monday
 
 meet.google.com/abc-defg-hij
@@ -8,9 +8,9 @@ Join by phone
 1234567890123@video.example.com
 ID: 1234567890123
 More joining options
-8 guests
-6 yes (4 virtually)
-1 no, 1 maybe
+15 guests
+8 yes (2 in a meeting room, 6 virtually)
+3 no, 2 maybe, 2 awaiting
 Sarah Johnson
 Organiser
 Office
@@ -22,7 +22,7 @@ Remote
 Edit
 David Kim
 Office
-Emily Rodriguez
+Dr. Emily Rodriguez
 event_busy
 Out of office
 Declined because I am traveling for a conference this week
@@ -30,23 +30,48 @@ Jake Thompson
 Optional
 Home
 Lisa Wang
-Office
+B5 Conference Room
 Michael Brown
 Optional
 Remote
+Jennifer Lopez-Smith
+event_busy
+Out of office
+Declined due to conflicting client meeting
+Robert O'Connor
+maybe
+Home
+Amanda Davis
+Office
+Thomas Anderson III
+bedtime
+Outside working hours
+Optional
+Remote
+marcus.wilson@company.com
 Hi team,
 
-This is our regular weekly standup where we'll discuss:
-- Progress updates from last week
-- Blockers and challenges
-- Goals for the upcoming week
-- Any questions or announcements
+This is our regular weekly standup and planning session where we'll discuss:
 
-Please come prepared with your updates. We'll keep it brief and focused.
+• Progress updates from last week
+• Current blockers and challenges  
+• Goals for the upcoming week
+• Sprint planning for next iteration
+• Any questions, announcements, or process improvements
 
-Thanks!
+Please come prepared with your updates and any blockers you're facing. We'll also do some light planning for the next sprint.
+
+Looking forward to seeing everyone!
+
+Best regards,
 Sarah
 
+Additional resources:
 https://company.atlassian.net/wiki/spaces/TEAM/pages/123456789/Weekly+Standup+Notes
+https://github.com/company/team-repo/issues
+https://company.slack.com/channels/team-standup
+
+Zoom alternative: https://us02web.zoom.us/j/1234567890?pwd=AbCdEf123456
+
 5 minutes before
 Created by: Sarah Johnson
