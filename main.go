@@ -304,8 +304,33 @@ func parseMeeting(input string) (*Meeting, error) {
 
 		// Parse organizer
 		if strings.Contains(line, "Organiser") || strings.Contains(line, "Organizer") {
-			if i+1 < len(lines) {
-				meeting.Organizer = strings.TrimSpace(lines[i+1])
+			// Look for organizer name in the lines before "Organiser"
+			// It could be 1 or 2 lines before depending on if there's a location
+			for j := 1; j <= 2 && i-j >= 0; j++ {
+				prevLine := strings.TrimSpace(lines[i-j])
+				// Skip empty lines and obvious locations
+				if len(prevLine) == 0 ||
+					prevLine == "Home" || prevLine == "Office" || prevLine == "Remote" ||
+					prevLine == "Scotland" || prevLine == "B27" || strings.Contains(prevLine, "Room") ||
+					strings.Contains(prevLine, "event_busy") || strings.Contains(prevLine, "Guests:") ||
+					strings.Contains(prevLine, "@") {
+					continue
+				}
+				// If it looks like a person's name (2-4 words, no numbers/symbols)
+				words := strings.Fields(prevLine)
+				if len(words) >= 2 && len(words) <= 4 {
+					hasInvalidChars := false
+					for _, word := range words {
+						if strings.ContainsAny(word, "0123456789@.+()") {
+							hasInvalidChars = true
+							break
+						}
+					}
+					if !hasInvalidChars {
+						meeting.Organizer = prevLine
+						break
+					}
+				}
 			}
 			continue
 		}
