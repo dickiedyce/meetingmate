@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build MeetingMate",
+			"type": "shell",
+			"command": "go build -o meetingmate",
+			"problemMatcher": [
+				"$go"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Run MeetingMate with Sample",
+			"type": "shell",
+			"command": "./meetingmate --input sample_meeting.txt --details --attendees",
+			"group": "test",
+			"dependsOn": "Build MeetingMate"
+		},
+		{
+			"label": "Run MeetingMate Help",
+			"type": "shell",
+			"command": "./meetingmate --help",
+			"group": "test",
+			"dependsOn": "Build MeetingMate"
+		}
+	]
+}
